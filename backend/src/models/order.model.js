@@ -6,51 +6,27 @@ const OrderSchema = new Schema({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'User'
-  },
-  orderStatus: {
-    type: String,
-    enum: ["pending", "completed", "canceled"],
-    default: "pending"
-  },
-  paymentMethod: {
-    type: String,
-    enum: ["credit_card", "stripe"],
-    required: true
-  },
-  paymentStatus: {
-    type: String,
-    enum: ["paid", "unpaid"],
-    default: "unpaid"
-  },
-  orderDate: {
-    type: Date,
-    default: Date.now
-  },
-  paymentId: {
-    type: String,
-    required: true
-  },
-  instructorId: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  courseImage: String,
-  courseTitle: {
-    type: String,
-    required: true
+    ref: "User",
   },
   courseId: {
     type: Schema.Types.ObjectId,
-    ref: 'Course',
-    required: true
+    ref: "Course",
+    required: true,
   },
-  coursePricing: {
+  amount: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ["pending", "completed", "cancelled"],
+    default: "pending",
+  },
+  paymentId: {
+    type: String,
+    required: true,
+  },
 });
-
 
 const Order = mongoose.model("Order", OrderSchema);
 

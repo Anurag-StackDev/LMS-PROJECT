@@ -7,11 +7,8 @@ const LectureSchema = new Schema({
     type: String,
     required: true,
   },
-  videoUrl: {
-    type: String,
-    required: true,
-  },
-  public_id: String,
+  videoUrl: { type: String },
+  public_id: { type: String },
   freePreview: {
     type: Boolean,
     default: false,
@@ -19,40 +16,46 @@ const LectureSchema = new Schema({
 });
 
 const CourseSchema = new mongoose.Schema({
-  instructorId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now,
-  },
   title: {
     type: String,
     required: true,
   },
-  category: String,
-  level: String,
-  primaryLanguage: String,
-  subtitle: String,
+  thumbnail: {
+    type: String,
+    require: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  category: {
+    type: String,
+    require: true,
+  },
+  level: {
+    type: String,
+    enum: ["Beginner", "Intermediate", "Advance", "Expert"],
+  },
   description: {
     type: String,
     required: true,
   },
-  image: String,
-  welcomeMessage: String,
-  pricing: {
-    type: Number,
-    required: true,
+  instructorId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
   },
-  objectives: String,
+  enrolledStudents: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   curriculum: [LectureSchema],
   isPublished: {
     type: Boolean,
     default: false,
   },
-});
+},{timestamps:true});
 
 const Course = mongoose.model("Course", CourseSchema);
 
