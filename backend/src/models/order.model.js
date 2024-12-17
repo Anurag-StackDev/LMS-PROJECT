@@ -24,10 +24,10 @@ const OrderSchema = new Schema({
   },
   paymentId: {
     type: String,
-    required: true,
   },
-});
+},{timestamps:true});
 
 const Order = mongoose.model("Order", OrderSchema);
 
 export default Order;
+ 

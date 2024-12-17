@@ -20,7 +20,7 @@ const CourseSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  thumbnail: {
+  thumbnailUrl: {
     type: String,
     require: true,
   },

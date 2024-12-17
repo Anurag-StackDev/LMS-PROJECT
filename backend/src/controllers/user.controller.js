@@ -1,21 +1,24 @@
-import User from "user.model.js";
-import Course from "course.model.js";
+import User from "../models/user.model.js";
+import { deleteCloudinary, uploadCloudinary } from "../utilities/Cloudinary.js";
 
 export const getUserProfile = async (req, res) => {
-  const { userId } = req.id;
+  const userId = req.id;
   try {
     const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "Profile not found" });
-    const enrolledIn = await Course.find({ enrolledStudents: userId });
-    if (enrolledIn.length === 0)
-      return res.status(404).json({ message: "No courses found" });
-    res.status(200).json({ user, enrolledIn });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Profile not found" });
+    }
+    res.status(200).json({ success: true, user });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
   }
 };
 
-export const updatePofile = async (req, res) => {
+export const updateProfile = async (req, res) => {
   try {
     const userId = req.id;
     const { name } = req.body;
@@ -23,26 +26,64 @@ export const updatePofile = async (req, res) => {
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({
-        message: "User not found",
-        success: false,
-      });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
-    if (user.imageUrl) {
-      const publicId = user.imageUrl.split("/").pop().split(".")[0];
-      deleteCloudinary(publicId);
+    const updateFields = { name };
+
+    if (imageFile) {
+      if (user.imageUrl) {
+        const publicId = user.imageUrl.split("/").pop().split(".")[0];
+        await deleteCloudinary(publicId);
+      }
 
       const response = await uploadCloudinary(imageFile);
-      const imageUrl = response.secure_url;
-
-      const userData = { name, imageUrl };
-      await findByIdAndupdate(userId, userData, { new: true });
-
-      res.status(200).json({
-        success: true,
-        message: "Profile Updated Successfully",
-      });
+      updateFields.imageUrl = response.secure_url;
     }
-  } catch (error) {}
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+      new: true,
+    });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Profile updated successfully",
+        user: updatedUser,
+      });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Profile update failed",
+        error: error.message,
+      });
+  }
+};
+
+export const enrolledCourses = async (req, res) => {
+  const userId = req.id;
+  try {
+    const enrolledIn = await Course.find({ enrolledStudents: userId });
+    if (!enrolledIn.length) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Not enrolled in any course" });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "Enrolled courses", enrolledIn });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Failed to retrieve enrolled courses",
+        error: error.message,
+      });
+  }
 };

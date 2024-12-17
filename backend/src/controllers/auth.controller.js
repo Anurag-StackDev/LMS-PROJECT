@@ -1,6 +1,6 @@
-import bcrypt from "bcrypt";
-import User from "./models/User"; // Adjust the path to your User model
-import { generateAccessToken, generateRefreshToken } from "./auth.js";
+import bcrypt from "bcryptjs";
+import User from "../models/user.model.js";
+import { generateAccessToken, generateRefreshToken } from "../utilities/JWTToken.js";
 
 export const register = async (req, res) => {
   try {
