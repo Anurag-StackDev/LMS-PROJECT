@@ -5,6 +5,6 @@ import { createStripeSession, stripeWebhook } from "../controllers/order.control
 const router = express.Router();
 
 router.post("/create-session", authProtected, createStripeSession);
-router.post("/stripe-webhook", express.raw({ type: "application/json" }), stripeWebhook);
+router.post("/stripe-webhook", authProtected, express.raw({ type: "application/json" }), stripeWebhook);
 
 export default router;
