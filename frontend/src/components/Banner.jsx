@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const Banner = () => {
     return (
       <div className="bg-[#F2F2F2] text-black py-16 px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center lg:items-center justify-between space-y-8 lg:space-y-0 lg:space-x-8">
@@ -9,12 +11,12 @@ const Banner = () => {
             Learn from the best online courses and boost your skills. Interactive lessons, expert instructors, and a vibrant community await you.
           </p>
           <div className="inline-block">
-            <a
+            <Link
               href="/courses"
               className="bg-indigo-500 text-white hover:bg-indigo-600 font-bold py-3 px-8 rounded-md transition-all duration-300"
             >
               Explore Courses
-            </a>
+            </Link>
           </div>
         </div>
         <div className="w-full lg:w-auto">

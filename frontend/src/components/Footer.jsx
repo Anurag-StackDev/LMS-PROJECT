@@ -1,4 +1,5 @@
 import { FaFacebookF, FaTwitter, FaInstagram, FaGlobe } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -8,9 +9,9 @@ const Footer = () => {
           E-Learning
         </div>
         <div className="flex space-x-6">
-          <a href="/about" className="hover:underline">About Us</a>
-          <a href="/courses" className="hover:underline">Courses</a>
-          <a href="/contact" className="hover:underline">Contact</a>
+          <Link to="/about" className="hover:underline">About Us</Link>
+          <Link to="/courses" className="hover:underline">Courses</Link>
+          <Link to="/contact" className="hover:underline">Contact</Link>
         </div>
         <div className="flex items-center space-x-6">
           <div className="flex items-center">
@@ -18,15 +19,15 @@ const Footer = () => {
             <span>English</span>
           </div>
           <div className="flex space-x-4">
-            <a href="#" aria-label="Facebook" className="hover:text-indigo-500">
+            <Link to="#" aria-label="Facebook" className="hover:text-indigo-500">
               <FaFacebookF size={24} />
-            </a>
-            <a href="#" aria-label="Twitter" className="hover:text-indigo-500">
+            </Link>
+            <Link to="#" aria-label="Twitter" className="hover:text-indigo-500">
               <FaTwitter size={24} />
-            </a>
-            <a href="#" aria-label="Instagram" className="hover:text-indigo-500">
+            </Link>
+            <Link to="#" aria-label="Instagram" className="hover:text-indigo-500">
               <FaInstagram size={24} />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

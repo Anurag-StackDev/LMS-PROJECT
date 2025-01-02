@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Banner from "../components/Banner";
 import Card from "../components/Card";
 import Testimonials from "../components/Testimonials";
@@ -27,12 +28,12 @@ const Home = () => {
           ))}
         </div>
         <div className="inline-block px-4 py-10">
-          <a
-            href="/courses"
+          <Link
+            to="/courses"
             className="font-bold py-3 px-8 hover:bg-indigo-500 hover:text-white rounded-md transition-all duration-300 border-2 border-black"
           >
             Explore all Courses
-          </a>
+          </Link>
         </div>
       </div>
       <Testimonials/>
