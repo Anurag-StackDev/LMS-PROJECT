@@ -9,25 +9,24 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const uploadCloudinary = async (filePath) => {
-  try {
-    const response = await cloudinary.uploader.upload(filePath, {
-      resource_type: "auto",
-      folder: "LMS",
-    });
-
-    return response;
-  } catch (error) {
-    console.log(error);
-    throw new Error("Error uploading to cloudinary");
-  }
+export const uploadCloudinary = (file) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload_stream(
+        { resource_type: "auto", folder: "LMS" },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      )
+      .end(file.buffer);
+  });
 };
 
-export const deleteCloudinary = async (publicId) => {
+export const deleteCloudinary = async (publicId, type) => {
   try {
-    await cloudinary.uploader.destroy(publicId);
+    await cloudinary.uploader.destroy(publicId,{ resource_type: type });
   } catch (error) {
     console.log(error);
-    throw new Error("failed to delete assest from cloudinary");
+    throw new Error("Failed to delete asset from Cloudinary");
   }
 };

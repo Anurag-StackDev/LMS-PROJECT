@@ -1,16 +1,10 @@
 import { useState } from "react";
+import categories from "../assets/category.json";
 
 const FilterSidebar = () => {
   const [showMore, setShowMore] = useState(false);
-  const items = [
-    { id: "category1", label: "All Categories" },
-    { id: "category2", label: "AWS Certification" },
-    { id: "category3", label: "Cloud Computing" },
-    { id: "category4", label: "Security" },
-    { id: "category5", label: "Solutions Architect" },
-  ];
 
-  const visibleItems = showMore ? items : items.slice(0, 4);
+  const visibleItems = showMore ? categories : categories.slice(0, 4);
 
   return (
     <div className="hidden md:block bg-gray-100 w-full max-w-xs rounded-md shadow-lg overflow-hidden">
@@ -32,7 +26,7 @@ const FilterSidebar = () => {
               </li>
             ))}
           </ul>
-          {items.length > 4 && (
+          {categories.length > 4 && (
             <button
               className="mt-2 text-indigo-500 hover:text-black transition-colors duration-300 font-bold text-xs"
               onClick={() => setShowMore(!showMore)}

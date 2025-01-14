@@ -1,20 +1,40 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login, signup } from "../store/features/authSlice";
+import toast from "react-hot-toast";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loginData, setLoginData] = useState({ email: "", password: "" });
-  const [signupData, setSignupData] = useState({ name: "", email: "", password: "" });
+  const [signupData, setSignupData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    
-    console.log(loginData);
+    try {
+      await dispatch(login(loginData)).unwrap();
+      toast.success("Login successful");
+      navigate("/");
+    } catch (error) {
+      toast.error(error?.message || "Login failed. Please try again.");
+    }
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-
-    console.log(signupData);
+    try {
+      await dispatch(signup(signupData)).unwrap();
+      toast.success("Signup successful");
+      navigate("/");
+    } catch (error) {
+      toast.error(error?.message || "Signup failed. Please try again.");
+    }
   };
 
   return (
@@ -51,7 +71,9 @@ const Auth = () => {
               <input
                 type="email"
                 value={loginData.email}
-                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                onChange={(e) =>
+                  setLoginData({ ...loginData, email: e.target.value })
+                }
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="Enter your email"
               />
@@ -63,7 +85,9 @@ const Auth = () => {
               <input
                 type="password"
                 value={loginData.password}
-                onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                onChange={(e) =>
+                  setLoginData({ ...loginData, password: e.target.value })
+                }
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="Enter your password"
               />
@@ -82,7 +106,9 @@ const Auth = () => {
               <input
                 type="text"
                 value={signupData.name}
-                onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
+                onChange={(e) =>
+                  setSignupData({ ...signupData, name: e.target.value })
+                }
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="Enter your name"
               />
@@ -94,7 +120,9 @@ const Auth = () => {
               <input
                 type="email"
                 value={signupData.email}
-                onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
+                onChange={(e) =>
+                  setSignupData({ ...signupData, email: e.target.value })
+                }
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="Enter your email"
               />
@@ -106,7 +134,9 @@ const Auth = () => {
               <input
                 type="password"
                 value={signupData.password}
-                onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
+                onChange={(e) =>
+                  setSignupData({ ...signupData, password: e.target.value })
+                }
                 className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 placeholder="Enter your password"
               />

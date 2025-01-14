@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const LectureSchema = new Schema({
+  order: { type: Number },
   title: {
     type: String,
     required: true,
@@ -15,47 +16,50 @@ const LectureSchema = new Schema({
   },
 });
 
-const CourseSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  thumbnailUrl: {
-    type: String,
-    require: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  category: {
-    type: String,
-    require: true,
-  },
-  level: {
-    type: String,
-    enum: ["Beginner", "Intermediate", "Advance", "Expert"],
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  instructorId: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
-  enrolledStudents: [
-    {
+const CourseSchema = new Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+    },
+    thumbnail: {
+      type: String,
+      require: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    category: {
+      type: String,
+      require: true,
+    },
+    level: {
+      type: String,
+      enum: ["Beginner", "Intermediate", "Advance", "Expert"],
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    instructor: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-  ],
-  curriculum: [LectureSchema],
-  isPublished: {
-    type: Boolean,
-    default: false,
+    enrolledStudents: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    curriculum: [LectureSchema],
+    isPublished: {
+      type: Boolean,
+      default: false,
+    },
   },
-},{timestamps:true});
+  { timestamps: true }
+);
 
 const Course = mongoose.model("Course", CourseSchema);
 

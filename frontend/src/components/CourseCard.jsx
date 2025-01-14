@@ -1,16 +1,15 @@
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const CourseCard = ({
-  _id,
-  title,
-  description,
-  shortDescription,
-  instructorName,
-  instructorImage,
-  level,
-  price,
-  imageUrl,
-}) => {
+const CourseCard = ({ course }) => {
+  const [
+    _id,
+    title,
+    description,
+    instructor,
+    level,
+    price,
+    imageUrl,
+  ] = course;
   return (
     <Link to={`/course/${_id}`}>
       <div className="max-w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col sm:flex-row md:flex-row lg:flex-row">
@@ -29,20 +28,18 @@ const CourseCard = ({
             <span className="font-semibold text-gray-700 text-sm">Level:</span>
             <span className="text-gray-700 text-sm ml-2">{level}</span>
           </div>
-          <p className="text-gray-700 mt-3 text-sm hidden md:block lg:hidden">
-            {shortDescription}
-          </p>
+          
           <p className="text-gray-700 mt-3 text-sm hidden lg:block">
             {description}
           </p>
           <div className="flex items-center mt-4">
             <img
               className="w-12 h-12 rounded-full mr-4 border-2 border-gray-800"
-              src={instructorImage}
-              alt={`${instructorName}'s profile`}
+              src={instructor?.imageUrl}
+              alt={`${instructor?.name}'s profile`}
             />
             <div>
-              <p className="text-gray-900 font-semibold">{instructorName}</p>
+              <p className="text-gray-900 font-semibold">{instructor?.name}</p>
             </div>
           </div>
           <div className="flex items-center mt-2">

@@ -1,75 +1,23 @@
+import { useEffect } from "react";
 import CourseCard from "../components/CourseCard";
 import FilterSidebar from "../components/FilterSidebar";
+import { allCourses } from "../store/features/courseSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Courses = () => {
-  const courseData = [
-    {
-      title: "Edward's AWS Certified Security Specialty Course (SCS-C02)",
-      description: "AWS Security Certification Course from someone with years of AWS experience. Covers CloudTrail, GuardDuty, ControlTower! This is a truncated description for large screens.",
-      shortDescription: "AWS Security Certification Course from someone with years of AWS experience.",
-      instructorName: "Edward Viaene",
-      instructorImage: "instructor-image.png",
-      level: "Expert",
-      price: 549,
-      originalPrice: 1499,
-      imageUrl: "aws-certified-logo.png"
-    },
-    {
-      title: "Edward's AWS Certified Security Specialty Course (SCS-C02)",
-      description: "AWS Security Certification Course from someone with years of AWS experience. Covers CloudTrail, GuardDuty, ControlTower! This is a truncated description for large screens.",
-      shortDescription: "AWS Security Certification Course from someone with years of AWS experience.",
-      instructorName: "Edward Viaene",
-      instructorImage: "instructor-image.png",
-      level: "Expert",
-      price: 549,
-      originalPrice: 1499,
-      imageUrl: "aws-certified-logo.png"
-    },
-    {
-      title: "Edward's AWS Certified Security Specialty Course (SCS-C02)",
-      description: "AWS Security Certification Course from someone with years of AWS experience. Covers CloudTrail, GuardDuty, ControlTower! This is a truncated description for large screens.",
-      shortDescription: "AWS Security Certification Course from someone with years of AWS experience.",
-      instructorName: "Edward Viaene",
-      instructorImage: "instructor-image.png",
-      level: "Expert",
-      price: 549,
-      originalPrice: 1499,
-      imageUrl: "aws-certified-logo.png"
-    },
-    {
-      title: "Edward's AWS Certified Security Specialty Course (SCS-C02)",
-      description: "AWS Security Certification Course from someone with years of AWS experience. Covers CloudTrail, GuardDuty, ControlTower! This is a truncated description for large screens.",
-      shortDescription: "AWS Security Certification Course from someone with years of AWS experience.",
-      instructorName: "Edward Viaene",
-      instructorImage: "instructor-image.png",
-      level: "Expert",
-      price: 549,
-      originalPrice: 1499,
-      imageUrl: "aws-certified-logo.png"
-    },
-    {
-      title: "Edward's AWS Certified Security Specialty Course (SCS-C02)",
-      description: "AWS Security Certification Course from someone with years of AWS experience. Covers CloudTrail, GuardDuty, ControlTower! This is a truncated description for large screens.",
-      shortDescription: "AWS Security Certification Course from someone with years of AWS experience.",
-      instructorName: "Edward Viaene",
-      instructorImage: "instructor-image.png",
-      level: "Expert",
-      price: 549,
-      originalPrice: 1499,
-      imageUrl: "aws-certified-logo.png"
-    },
-    {
-      title: "Edward's AWS Certified Security Specialty Course (SCS-C02)",
-      description: "AWS Security Certification Course from someone with years of AWS experience. Covers CloudTrail, GuardDuty, ControlTower! This is a truncated description for large screens.",
-      shortDescription: "AWS Security Certification Course from someone with years of AWS experience.",
-      instructorName: "Edward Viaene",
-      instructorImage: "instructor-image.png",
-      level: "Expert",
-      price: 549,
-      originalPrice: 1499,
-      imageUrl: "aws-certified-logo.png"
-    },
-  ];
+  const { courses } = useSelector((state) => state.course);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(allCourses());
+  }, [dispatch]);
+
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const filteredCourse = courses.filter((course) => {
+    if (!user) return true;
+    return !course.enrolledUsers.includes(user._id);
+  });
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -81,9 +29,9 @@ const Courses = () => {
           <FilterSidebar />
         </div>
         <div className="w-full lg:w-3/4 flex flex-wrap gap-6 justify-center px-2 lg:px-4">
-          {courseData.map((course, index) => (
+          {filteredCourse.map((course, index) => (
             <div key={index} className="w-full">
-              <CourseCard {...course} />
+              <CourseCard course={course} />
             </div>
           ))}
         </div>

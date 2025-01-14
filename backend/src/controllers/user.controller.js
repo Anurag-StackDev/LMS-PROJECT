@@ -1,7 +1,7 @@
 import User from "../models/user.model.js";
 import { deleteCloudinary, uploadCloudinary } from "../utilities/Cloudinary.js";
 
-export const getUserProfile = async (req, res) => {
+export const userProfile = async (req, res) => {
   const userId = req.id;
   try {
     const user = await User.findById(userId);

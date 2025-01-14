@@ -8,7 +8,7 @@ import connectDB from "./database/db.js";
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
 import courseRoutes from "./routes/course.route.js";
-import instructerRoutes from "./routes/instructer.route.js";
+import instructorRoutes from "./routes/instructor.route.js";
 import orderRoutes from "./routes/order.route.js";
 import courseProgressRoutes from "./routes/progress.route.js";
 
@@ -26,7 +26,7 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/course", courseRoutes);
-app.use("/api/instructer", instructerRoutes);
+app.use("/api/instructor", instructorRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/progress", courseProgressRoutes);
 

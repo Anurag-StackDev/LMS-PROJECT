@@ -5,17 +5,17 @@ import { IoInfinite, IoTrophyOutline } from "react-icons/io5";
 const CourseAd = () => {
   return (
     <div className="hidden lg:block max-w-md lg:w-1/3 mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
-      <div className="relative bg-gray-800 p-6">
+      <div className="relative bg-gray-800 p-2">
         <div className="flex items-center justify-center">
           <img
             src="aws-certified-security-specialty.png"
             alt="AWS Certified Security Specialty"
-            className="h-44"
+            className="h-52 rounded-md bg-red-200 w-full"
           />
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
           <button className="text-gray-400">
-            <FaRegPlayCircle size={44} />
+            <FaRegPlayCircle size={48} />
           </button>
         </div>
       </div>
@@ -38,7 +38,7 @@ const CourseAd = () => {
         <div className="text-center text-sm text-gray-500 mt-4">
           30-Day Money-Back Guarantee
         </div>
-        <div className="mt-4">
+        <div className="mt-2">
           <div className="text-gray-800 font-bold mb-2">
             This course includes:
           </div>

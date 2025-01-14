@@ -1,30 +1,68 @@
 import { LuShoppingCart } from "react-icons/lu";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   IoGlobe,
   IoMenu,
   IoCloseCircleOutline,
   IoSearch,
 } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/features/authSlice.js";
 
 const NavbarSmall = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const user = true;
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const menuRef = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
+
+  const handleMenuItemClick = () => {
+    setMenuOpen(false);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
-    <nav className="bg-gray-800 text-white">
+    <nav className="bg-gradient-to-b from-gray-900 to-black text-white">
       <div className="mx-auto py-4 px-4 sm:px-6 flex justify-between items-center">
-        <div className="text-2xl font-extrabold bg-gradient-to-r from-indigo-400 to-indigo-600 bg-clip-text text-transparent">
-          E-Learning
+        <div className="text-2xl font-extrabold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+          <Link to="/">E-Learning</Link>
         </div>
         <div className="flex items-center gap-4">
-          <button className="hover:text-indigo-500">
+          <button className="hover:text-blue-500">
             <IoSearch size={24} />
           </button>
-          <span className="cursor-pointer hover:text-indigo-500">
+          <button className="hover:text-blue-500">
             <LuShoppingCart size={24} />
-          </span>
+          </button>
+          {user && (
+            <Link
+              to="/cart"
+              className="cursor-pointer hover:text-blue-500"
+              onClick={handleMenuItemClick}
+            >
+              <LuShoppingCart size={24} />
+            </Link>
+          )}
           <button onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? (
               <IoCloseCircleOutline size={28} />
@@ -35,57 +73,66 @@ const NavbarSmall = () => {
         </div>
       </div>
       {menuOpen && (
-        <div className="absolute top-16 right-0 w-80 h-4/5 bg-gray-800 text-white z-20 rounded-es-lg">
-          <div className="p-4 flex flex-col gap-4 h-full">
-            <Link
-              to="/profile"
-              className="hover:text-indigo-500 p-2 text-xl font-bold"
-            >
-              Profile
-            </Link>
-            <Link
-              to="/cart"
-              className="hover:text-indigo-500 p-2 text-xl font-bold"
-            >
-              Cart
-            </Link>
-            <Link
-              to="/orders"
-              className="hover:text-indigo-500 p-2 text-xl font-bold"
-            >
-              Orders
-            </Link>
-            <Link
-              to="/my-learning"
-              className="hover:text-indigo-500 p-2 text-xl font-bold"
-            >
-              My Learning
-            </Link>
-            {!user && (
+        <div
+          ref={menuRef}
+          className="absolute top-16 right-0 w-80 h-4/6 bg-gray-800 text-white z-20 rounded-es-lg shadow-lg"
+        >
+          <div className="px-10 py-4 flex flex-col gap-3 h-full relative">
+            {user ? (
               <>
                 <Link
-                  to="/login"
-                  className="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-3 rounded-md"
+                  to={`/${user.name}/profile`}
+                  className="hover:text-blue-500 p-2 text-xl font-bold"
+                  onClick={handleMenuItemClick}
                 >
-                  Login
+                  Profile
                 </Link>
                 <Link
-                  to="/register"
-                  className="bg-indigo-500 hover:bg-indigo-600 text-white py-2 px-3 rounded-md"
+                  to="/cart"
+                  className="hover:text-blue-500 p-2 text-xl font-bold"
+                  onClick={handleMenuItemClick}
                 >
-                  Register
+                  Cart
                 </Link>
-                <button className="bg-indigo-500 hover:bg-indigo-600 text-white p-2 rounded-md">
-                  <IoGlobe size={24} />
-                </button>
+                <Link
+                  to={`/${user.name}/orders`}
+                  className="hover:text-blue-500 p-2 text-xl font-bold"
+                  onClick={handleMenuItemClick}
+                >
+                  Orders
+                </Link>
+                <Link
+                  to={`/${user.name}/my-learning`}
+                  className="hover:text-blue-500 p-2 text-xl font-bold"
+                  onClick={handleMenuItemClick}
+                >
+                  My Learning
+                </Link>
+                <Link
+                  to="/logout"
+                  className="hover:bg-blue-600 p-2 text-xl font-bold rounded-md text-center bg-blue-500 mt-auto"
+                  onClick={(handleMenuItemClick, handleLogout)}
+                >
+                  Logout
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/auth"
+                  className="hover:text-blue-500 px-2 text-lg font-bold"
+                  onClick={handleMenuItemClick}
+                >
+                  Sign In
+                </Link>
               </>
             )}
-            <Link
-              to="/logout"
-              className="hover:bg-indigo-600 p-2 text-xl font-bold rounded-md text-center bg-indigo-500 mt-auto"
+            <button
+              className="absolute bottom-4 right-4 bg-gray-700 hover:bg-blue-500 text-white p-2 rounded-md transition-all duration-500"
+              onClick={handleMenuItemClick}
             >
-              <button>Logout</button>
-            </Link>
+              <IoGlobe size={24} />
+            </button>
           </div>
         </div>
       )}

@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "name": "Development",
+        "image": "development.jpg"
+    },
+    {
+        "id": 2,
+        "name": "Business",
+        "image": "business.jpg"
+    },
+    {
+        "id": 3,
+        "name": "Finance & Accounting",
+        "image": "finance.jpg"
+    },
+    {
+        "id": 4,
+        "name": "IT & Software",
+        "image": "it.jpg"
+    },
+    {
+        "id": 5,
+        "name": "Office Productivity",
+        "image": "office.jpg"
+    },
+    {
+        "id": 6,
+        "name": "Personal Development",
+        "image": "personal.jpg"
+    },
+    {
+        "id": 7,
+        "name": "Design",
+        "image": "design.jpg"
+    },
+    {
+        "id": 8,
+        "name": "Marketing",
+        "image": "marketing.jpg"
+    },
+    {
+        "id": 9,
+        "name": "Lifestyle",
+        "image": "lifestyle.jpg"
+    },
+    {
+        "id": 10,
+        "name": "Photography",
+        "image": "photography.jpg"
+    },
+    {
+        "id": 11,
+        "name": "Health & Fitness",
+        "image": "health.jpg"
+    },
+    {
+        "id": 12,
+        "name": "Music",
+        "image": "music.jpg"
+    },
+    {
+        "id": 13,
+        "name": "Teaching & Academics",
+        "image": "teaching.jpg"
+    },
+    {
+        "id": 14,
+        "name": "Films & Animation",
+        "image": "teaching.jpg"
+    },
+    {
+        "id": 15,
+        "name": "Writing & Translation",
+        "image": "writing.jpg"
+    },
+    {
+        "id": 16,
+        "name": "Other",
+        "image": "other.jpg"
+    }
+]
