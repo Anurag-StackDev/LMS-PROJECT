@@ -16,7 +16,7 @@ const Courses = () => {
 
   const filteredCourse = courses.filter((course) => {
     if (!user) return true;
-    return !course.enrolledUsers.includes(user._id);
+    return !course.enrolledStudents.includes(user._id);
   });
 
   return (

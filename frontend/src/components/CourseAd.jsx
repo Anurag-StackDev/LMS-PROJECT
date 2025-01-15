@@ -1,42 +1,37 @@
 import { FaRegClock, FaRegPlayCircle, FaMobileAlt } from "react-icons/fa";
 import { MdOndemandVideo } from "react-icons/md";
 import { IoInfinite, IoTrophyOutline } from "react-icons/io5";
+import { useSelector } from "react-redux";
 
-const CourseAd = () => {
+const CourseAd = ({ price, thumbnail, title }) => {
+  const { user } = useSelector((state) => state.auth)
+
   return (
     <div className="hidden lg:block max-w-md lg:w-1/3 mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="relative bg-gray-800 p-2">
         <div className="flex items-center justify-center">
-          <img
-            src="aws-certified-security-specialty.png"
-            alt="AWS Certified Security Specialty"
-            className="h-52 rounded-md bg-red-200 w-full"
-          />
+          <img src={thumbnail} alt={title} className="h-52 rounded-md w-full" />
         </div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <button className="text-gray-400">
+          <button className="text-gray-400 hover:text-indigo-500 transition duration-300">
             <FaRegPlayCircle size={48} />
           </button>
         </div>
       </div>
       <div className="p-6">
-        <div className="text-3xl font-bold text-gray-800">₹549</div>
+        <div className="text-3xl font-bold text-gray-800">{price}</div>
         <div className="flex items-center text-sm text-gray-500 mt-2">
           <FaRegClock className="text-red-600 mr-1" /> 12 hours left at this
           price!
         </div>
         <div className="mt-6">
           <button className="w-full bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600">
-            Add to cart
+            Buy Now
           </button>
         </div>
-        <div className="mt-3">
-          <button className="w-full bg-gray-200 text-gray-800 py-3 rounded-lg hover:bg-gray-300">
-            Buy now
-          </button>
-        </div>
+        
         <div className="text-center text-sm text-gray-500 mt-4">
-          30-Day Money-Back Guarantee
+          30-Day No-Money-Back Guarantee
         </div>
         <div className="mt-2">
           <div className="text-gray-800 font-bold mb-2">
@@ -45,7 +40,7 @@ const CourseAd = () => {
           <ul className="list-none space-y-2">
             <li className="flex items-center p-1">
               <MdOndemandVideo className="text-red-500 mr-2" />
-              <span className="text-gray-700">7.5 hours on-demand video</span>
+              <span className="text-gray-700">12 hours on-demand video</span>
             </li>
             <li className="flex items-center p-1">
               <FaMobileAlt className="text-red-500 mr-2" />

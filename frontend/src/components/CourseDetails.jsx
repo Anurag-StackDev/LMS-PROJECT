@@ -1,67 +1,98 @@
 import { FaRegPlayCircle, FaRegClock, FaPlayCircle } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import { createOrder } from "../store/features/orderSlice";
 
 const CourseDetails = ({
+  id,
   title,
   description,
+  price,
+  thumbnail,
   level,
   courseContent,
   instructorName,
   instructorImage,
-  enrolled,
 }) => {
+  const { user } = useSelector((state) => state.auth);
+  const { orders } = useSelector((state) => state.order);
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+  const stripePromise = loadStripe(
+    "pk_test_51QX3eQSDOYllvf3Y8yCa5biTBfeCiKptrdKPRLHs4KUd8FMyJ6J3V4C5k6qH4Xwjqu3KsZ2d5RnNWAcM7dlX1Jtv00qXjsPx6D"
+  );
+
+  const handlePayment = async () => {
+    const stripe = await stripePromise;
+    console.log("before dispatch");
+    await dispatch(createOrder({ courseId: id }));
+console.log("here");
+    if (orders.length === 0) {
+      navigate("/my-learning");
+    }
+
+    // Redirect to Checkout
+    const session = orders[orders.length - 1];
+    console.log(session);
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+
+    if (result.error) {
+      console.error("Error:", result.error);
+    }
+  };
+
   return (
     <div className="flex-1 p-8">
-      {/* Player section - only show if showPlayer is true */}
-      {enrolled && (
-        <div className="block lg:hidden pb-10">
-          <div className="relative bg-gray-800 p-6">
-            <div className="flex items-center justify-center">
-              <img
-                src="aws-certified-security-specialty.png"
-                alt="AWS Certified Security Specialty"
-                className="h-60"
-              />
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button className="text-gray-400">
-                <FaRegPlayCircle size={44} />
-              </button>
-            </div>
+      {/* Course Player section */}
+      <div className="block lg:hidden pb-10">
+        <div className="relative bg-gray-800 p-1 rounded-md">
+          <div className="flex items-center justify-center">
+            <img
+              src={thumbnail}
+              alt={title}
+              className="sm:h-64 md:h-96 rounded-md"
+            />
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <button className="text-gray-400 hover:text-indigo-500 transition duration-300">
+              <FaRegPlayCircle size={44} />
+            </button>
           </div>
         </div>
-      )}
-
+      </div>
       <h1 className="text-gray-900 text-3xl xl:text-4xl font-semibold leading-tight">
         {title}
       </h1>
-
-      {level && (
-        <div className="mt-4">
-          <span className="font-semibold text-gray-700 text-xl">Level:</span>
-          <span className="text-gray-700 text-xl ml-2">{level}</span>
-        </div>
-      )}
-
+      <div className="mt-4">
+        <span className="font-semibold text-gray-700 text-xl">Level:</span>
+        <span className="text-gray-700 text-xl ml-2">{level}</span>
+      </div>
       <p className="text-gray-700 mt-6 text-lg xl:text-xl">{description}</p>
 
-      {/* Pricing section - only show if showPricing is true */}
-      {enrolled && (
-        <div className="mt-8 block lg:hidden">
-          <div className="text-3xl font-bold text-gray-800">₹549</div>
-          <div className="flex items-center text-sm text-gray-500 mt-2">
-            <FaRegClock className="text-red-600 mr-1" /> 12 hours left at this
-            price!
-          </div>
-          <div className="mt-6">
-            <button className="w-full bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600">
-              Add to cart
-            </button>
-          </div>
-          <div className="text-center text-sm text-gray-500 mt-4">
-            30-Day Money-Back Guarantee
-          </div>
+      {/* Course price section */}
+      <div className="mt-8 block lg:hidden">
+        <div className="text-3xl font-bold text-gray-800">{price}</div>
+        <div className="flex items-center text-sm text-gray-500 mt-2">
+          <FaRegClock className="text-red-600 mr-1" /> 12 hours left at this
+          price!
         </div>
-      )}
+        <div className="mt-6">
+          <button
+            onClick={user ? handlePayment : () => navigate("/auth")}
+            className="w-full bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600"
+          >
+            Buy Now
+          </button>
+        </div>
+        <div className="text-center text-sm text-gray-500 mt-4">
+          30-Day Money-Back Guarantee
+        </div>
+      </div>
 
       {/* Course content section */}
       {courseContent && (
@@ -84,9 +115,9 @@ const CourseDetails = ({
                       <div className="text-sm font-medium text-gray-900">
                         {video.title}
                       </div>
-                      {video.duration && (
-                        <div className="text-sm text-gray-500 ml-auto">
-                          {video.duration}
+                      {video.freePreview && (
+                        <div className="text-xs ml-auto hover:bg-indigo-600 rounded-md hover:text-white px-2 font-semibold">
+                          Free Preview
                         </div>
                       )}
                     </div>
@@ -98,6 +129,7 @@ const CourseDetails = ({
         </div>
       )}
 
+      {/* Instructor section */}
       <div className="mt-8 flex items-center">
         <img
           className="w-16 h-16 rounded-full mr-4"

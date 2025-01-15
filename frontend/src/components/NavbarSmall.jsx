@@ -1,4 +1,4 @@
-import { LuShoppingCart } from "react-icons/lu";
+import { LuArchive } from "react-icons/lu";
 import { useState, useEffect, useRef } from "react";
 import {
   IoGlobe,
@@ -52,17 +52,15 @@ const NavbarSmall = () => {
             <IoSearch size={24} />
           </button>
           <button className="hover:text-blue-500">
-            <LuShoppingCart size={24} />
-          </button>
-          {user && (
-            <Link
-              to="/cart"
-              className="cursor-pointer hover:text-blue-500"
+          <Link
+              to={`/${user?.name}/orders`}
+              className="cursor-pointer"
               onClick={handleMenuItemClick}
             >
-              <LuShoppingCart size={24} />
+              <LuArchive size={24} />
             </Link>
-          )}
+          </button>
+          
           <button onClick={() => setMenuOpen(!menuOpen)}>
             {menuOpen ? (
               <IoCloseCircleOutline size={28} />
@@ -88,7 +86,7 @@ const NavbarSmall = () => {
                   Profile
                 </Link>
                 <Link
-                  to="/cart"
+                  to="*"
                   className="hover:text-blue-500 p-2 text-xl font-bold"
                   onClick={handleMenuItemClick}
                 >
@@ -110,7 +108,7 @@ const NavbarSmall = () => {
                 </Link>
                 <Link
                   to="/logout"
-                  className="hover:bg-blue-600 p-2 text-xl font-bold rounded-md text-center bg-blue-500 mt-auto"
+                  className="hover:bg-blue-600 p-2 mr-10 font-bold rounded-md text-center bg-blue-500 mt-auto"
                   onClick={(handleMenuItemClick, handleLogout)}
                 >
                   Logout
@@ -120,7 +118,7 @@ const NavbarSmall = () => {
               <>
                 <Link
                   to="/auth"
-                  className="hover:text-blue-500 px-2 text-lg font-bold"
+                  className="hover:text-blue-500 px-2 text-lg font-bold mr-10"
                   onClick={handleMenuItemClick}
                 >
                   Sign In
@@ -128,7 +126,7 @@ const NavbarSmall = () => {
               </>
             )}
             <button
-              className="absolute bottom-4 right-4 bg-gray-700 hover:bg-blue-500 text-white p-2 rounded-md transition-all duration-500"
+              className="absolute bottom-4 right-4 bg-gray-700 hover:bg-blue-600 text-white p-2 rounded-md transition-all duration-500"
               onClick={handleMenuItemClick}
             >
               <IoGlobe size={24} />

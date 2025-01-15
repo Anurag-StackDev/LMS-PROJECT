@@ -39,7 +39,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/courses" element={<Courses />} />
-        <Route path="/course/:id" element={<Course />} />
+        <Route path="/course/:courseId" element={<Course />} />
         {isAuthenticated && userName && (
           <Route path={`${userName}`}>
             <Route path="my-learning" element={<MyLearning />} />

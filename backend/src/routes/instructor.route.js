@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post("/create-course", authProtected, upload, createCourse);
 router.put("/update-course/:courseId", authProtected, upload, updateCourse);
-router.post("/delete-course/:courseId", authProtected, deleteCourse);
+router.delete("/delete-course/:courseId", authProtected, deleteCourse);
 router.get("/instructor-courses", authProtected, instructorCourses);
 
 export default router;

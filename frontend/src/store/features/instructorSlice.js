@@ -12,7 +12,9 @@ export const instructorCourses = createAsyncThunk(
   "instructor/instructorCourses",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get("/api/instructor/instructor-courses");
+      const response = await axiosInstance.get(
+        "/api/instructor/instructor-courses"
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Failed to fetch courses");
@@ -56,7 +58,9 @@ export const deleteCourse = createAsyncThunk(
   "instructor/deleteCourse",
   async (courseId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.delete(`/api/instructor/delete-course/${courseId}`);
+      const response = await axiosInstance.delete(
+        `/api/instructor/delete-course/${courseId}`
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Course deletion failed");
@@ -92,8 +96,8 @@ const instructorSlice = createSlice({
       })
       .addCase(createCourse.pending, (state) => {
         state.loading = true;
-        state.error = null;
         state.message = null;
+        state.error = null;
       })
       .addCase(createCourse.fulfilled, (state, action) => {
         state.loading = false;
@@ -111,10 +115,6 @@ const instructorSlice = createSlice({
       })
       .addCase(updateCourse.fulfilled, (state, action) => {
         state.loading = false;
-        const index = state.iCourses.findIndex(course => course._id === action.payload.course._id);
-        if (index !== -1) {
-          state.iCourses[index] = action.payload.course;
-        }
         state.message = action.payload.message;
       })
       .addCase(updateCourse.rejected, (state, action) => {
@@ -128,7 +128,6 @@ const instructorSlice = createSlice({
       })
       .addCase(deleteCourse.fulfilled, (state, action) => {
         state.loading = false;
-        state.iCourses = state.iCourses.filter(course => course._id !== action.meta.arg);
         state.message = action.payload.message;
       })
       .addCase(deleteCourse.rejected, (state, action) => {

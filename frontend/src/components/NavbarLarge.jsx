@@ -1,4 +1,4 @@
-import { LuLayoutDashboard, LuShoppingCart } from "react-icons/lu";
+import { LuLayoutDashboard, LuArchive } from "react-icons/lu";
 import { useState, useEffect } from "react";
 import { IoGlobe } from "react-icons/io5";
 import { Link } from "react-router-dom";
@@ -68,8 +68,8 @@ const NavbarLarge = () => {
               >
                 My Learning
               </Link>
-              <Link to="/cart" className="cursor-pointer hover:text-blue-500">
-                <LuShoppingCart size={24} />
+              <Link to={`/${user?.name}/orders`} className="cursor-pointer hover:text-blue-500">
+                <LuArchive size={24} />
               </Link>
               <div
                 className="relative"

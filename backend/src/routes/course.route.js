@@ -5,6 +5,6 @@ const router = express.Router()
 
 router.get("/all", getAllCourse)
 router.get("/search",searchCourse)
-router.get("/course/:courseId", singleCourse)
+router.get("/singleCourse/:courseId", singleCourse)
 
 export default router

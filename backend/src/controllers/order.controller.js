@@ -15,7 +15,7 @@ export const createStripeSession = async (req, res) => {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    const instructor = await User.findById(course.instructorId);
+    const instructor = await User.findById(course.instructor._id);
     if (!instructor) {
       return res.status(404).json({ message: "Instructor not found" });
     }
@@ -25,7 +25,7 @@ export const createStripeSession = async (req, res) => {
       courseId,
       amount: course.price,
     });
-
+    console.log("here new order", newOrder);
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -57,6 +57,7 @@ export const createStripeSession = async (req, res) => {
     }
 
     newOrder.paymentId = session.id;
+    newOrder.status = "completed";
     await newOrder.save();
 
     res.status(200).json({ success: true, url: session.url });

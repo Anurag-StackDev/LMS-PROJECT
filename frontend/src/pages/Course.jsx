@@ -7,17 +7,19 @@ import { useParams } from "react-router-dom";
 
 const Course = () => {
   const { courseId } = useParams();
-  const { course, loading, error } = useSelector((state) => state.course);
+  const { courses, loading, error } = useSelector((state) => state.course);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(singleCourse(courseId));
-  }, [dispatch, courseId]);
+  }, []);
+
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   const {
+    _id,
     thumbnail,
     title,
     level,
@@ -25,20 +27,22 @@ const Course = () => {
     description,
     instructor,
     curriculum,
-  } = course || {};
+  } = courses || {};
 
   return (
     <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6 p-10">
       <CourseDetails
+        id={_id}
         title={title}
+        thumbnail={thumbnail}
+        price={price}
         description={description}
         level={level}
         courseContent={curriculum}
         instructorName={instructor?.name}
         instructorImage={instructor?.imageUrl}
-        enrolled={false}
       />
-      <CourseAd price={price} imageUrl={thumbnail} />
+      <CourseAd title={title} price={price} thumbnail={thumbnail} />
     </div>
   );
 };

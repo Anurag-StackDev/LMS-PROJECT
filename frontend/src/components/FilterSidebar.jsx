@@ -21,7 +21,7 @@ const FilterSidebar = () => {
               <li key={item.id} className="flex items-center">
                 <input type="checkbox" id={item.id} className="mr-2" />
                 <label htmlFor={item.id} className="text-gray-800">
-                  {item.label}
+                  {item.name}
                 </label>
               </li>
             ))}

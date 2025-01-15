@@ -27,7 +27,6 @@ const Dashboard = () => {
   const handleDelete = async (courseId) => {
     try {
       await dispatch(deleteCourse(courseId));
-      console.log(message)
       toast.success(message);
     } catch {
       toast.error("Course deletion failed", error);

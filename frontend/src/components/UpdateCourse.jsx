@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { FaPlus, FaTrash, FaUpload } from "react-icons/fa6";
-import { toast } from "react-hot-toast";
 import ReactPlayer from "react-player";
-import { useSelector, useDispatch } from "react-redux";
-import { updateCourse } from "../store/features/instructorSlice";
+import { toast } from "react-hot-toast";
+import { useState, useEffect } from "react";
 import categories from "../assets/category.json";
+import { useSelector, useDispatch } from "react-redux";
+import { FaPlus, FaTrash, FaUpload } from "react-icons/fa6";
+import { updateCourse } from "../store/features/instructorSlice";
 
 const UpdateCourse = ({ isOpen, onClose, course }) => {
   const { loading, error, message } = useSelector((state) => state.instructor);
@@ -30,7 +30,10 @@ const UpdateCourse = ({ isOpen, onClose, course }) => {
         category: course.category,
         level: course.level,
       });
-      setLectures(course.curriculum);
+      setLectures(course.curriculum.map(lecture => ({
+        ...lecture,
+        isNew: false,
+      })));
       setThumbnailPreview(course.thumbnail);
     }
   }, [course]);
@@ -70,6 +73,7 @@ const UpdateCourse = ({ isOpen, onClose, course }) => {
         title: "",
         video: "",
         freePreview: false,
+        isNew: true,
       },
     ]);
   };
@@ -120,6 +124,8 @@ const UpdateCourse = ({ isOpen, onClose, course }) => {
           order: index + 1,
           title: lecture.title.trim(),
           freePreview: lecture.freePreview,
+          videoUrl: lecture.videoUrl,
+          public_id: lecture.public_id,
         })),
       };
 
@@ -215,13 +221,15 @@ const UpdateCourse = ({ isOpen, onClose, course }) => {
                     <span className="font-bold text-gray-700 text-xs px-2">
                       Lecture {index + 1}
                     </span>
-                    <button
-                      onClick={() => removeLecture(index)}
-                      className=" transition-colors duration-300 p-2 hover:bg-red-600 hover:text-white rounded-md"
-                      title="Remove Lecture"
-                    >
-                      <FaTrash size={14} />
-                    </button>
+                    {lecture.isNew && (
+                      <button
+                        onClick={() => removeLecture(index)}
+                        className="transition-colors duration-300 p-2 hover:bg-red-600 hover:text-white rounded-md"
+                        title="Remove Lecture"
+                      >
+                        <FaTrash size={14} />
+                      </button>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 px-1">

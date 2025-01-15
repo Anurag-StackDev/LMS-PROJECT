@@ -50,7 +50,7 @@ export const searchCourse = async (req, res) => {
 };
 
 export const singleCourse = async (req, res) => {
-  const courseId = req.params.courseId;
+  const {courseId} = req.params;
   try {
     const course = await Course.findById(courseId).populate("instructor");
 

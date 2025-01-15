@@ -35,7 +35,7 @@ export const singleCourse = createAsyncThunk(
   "course/singleCourse",
   async (courseId, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`api/course/course/${courseId}`);
+      const response = await axiosInstance.get(`api/course/singleCourse/${courseId}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Failed to fetch course");
@@ -85,6 +85,10 @@ const courseSlice = createSlice({
       .addCase(singleCourse.fulfilled, (state, action) => {
         state.loading = false;
         state.courses = action.payload.course;
+      })
+      .addCase(singleCourse.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

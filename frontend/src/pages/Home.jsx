@@ -2,45 +2,19 @@ import { Link } from "react-router-dom";
 import Banner from "../components/Banner";
 import Card from "../components/Card";
 import Testimonials from "../components/Testimonials";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { allCourses } from "../store/features/courseSlice";
 
 const Home = () => {
-  const courses = [
-    {
-      id: 1,
-      title: "Complete Web Development Bootcamp",
-      level: "Beginner",
-      instructor: "John Doe",
-      price: 499,
-      thumbnail: "https://via.placeholder.com/300x200",
-    },
-    {
-      id: 2,
-      title: "Advanced JavaScript Masterclass",
-      level: "Advanced",
-      instructor: "Jane Smith",
-      price: 799,
-      thumbnail: "https://via.placeholder.com/300x200",
-    },
-    {
-      id: 3,
-      title: "Python Programming for Data Science",
-      level: "Intermediate",
-      instructor: "Mike Johnson",
-      price: 699,
-      thumbnail: "https://via.placeholder.com/300x200",
-    },
-    {
-      id: 4,
-      title: "Mobile App Development with React Native",
-      level: "Intermediate",
-      instructor: "Sarah Wilson",
-      price: 899,
-      thumbnail: "https://via.placeholder.com/300x200",
-    },
-  ];
-
   const { user } = useSelector((state) => state.auth);
+  const { courses } = useSelector((state) => state.course);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(allCourses());
+  }, [dispatch]);
 
   return (
     <>
@@ -50,7 +24,9 @@ const Home = () => {
             {user?.name.charAt(0)}
           </div>
           <div className="flex flex-col">
-            <span className="text-gray-600 text-xs font-medium">Welcome back</span>
+            <span className="text-gray-600 text-xs font-medium">
+              Welcome back
+            </span>
             <h1 className="font-bold text-2xl bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
               {user?.name}
             </h1>
@@ -71,10 +47,17 @@ const Home = () => {
         <div className="flex flex-wrap justify-center gap-2">
           {courses.map((course) => (
             <div
-              key={course.id}
+              key={course._id}
               className="flex-grow-0 flex-shrink-0 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 p-2"
             >
-              <Card course={course} />
+              <Card
+                id={course._id}
+                title={course.title}
+                level={course.level}
+                thumbnail={course.thumbnail}
+                instructor={course.instructor.name}
+                price={course.price}
+              />
             </div>
           ))}
         </div>

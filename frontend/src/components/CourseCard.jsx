@@ -1,22 +1,14 @@
 import { Link } from "react-router-dom";
 
 const CourseCard = ({ course }) => {
-  const [
-    _id,
-    title,
-    description,
-    instructor,
-    level,
-    price,
-    imageUrl,
-  ] = course;
+  const { _id, title, description, instructor, level, price, thumbnail } = course;
   return (
     <Link to={`/course/${_id}`}>
       <div className="max-w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col sm:flex-row md:flex-row lg:flex-row">
         <div className="bg-gray-200 p-0 md:p-2 lg:p-4 flex-shrink-0 flex items-center justify-center w-full sm:w-full md:w-1/3 lg:w-2/6">
           <img
             className="w-full h-32 sm:h-32 md:h-36 lg:h-40 object-contain"
-            src={imageUrl}
+            src={thumbnail}
             alt={`${title} Logo`}
           />
         </div>
@@ -28,7 +20,7 @@ const CourseCard = ({ course }) => {
             <span className="font-semibold text-gray-700 text-sm">Level:</span>
             <span className="text-gray-700 text-sm ml-2">{level}</span>
           </div>
-          
+
           <p className="text-gray-700 mt-3 text-sm hidden lg:block">
             {description}
           </p>

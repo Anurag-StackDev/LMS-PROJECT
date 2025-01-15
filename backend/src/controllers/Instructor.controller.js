@@ -140,36 +140,12 @@ export const updateCourse = async (req, res) => {
         };
       });
       
-    // Delete removed lectures from Cloudinary
-    const removedLectures = course.curriculum.filter(
-      (existingLecture) =>
-        !curriculum.some((lecture) => lecture.order === existingLecture.order)
-    );
-
-    try {
-      await Promise.all(
-        removedLectures.map(
-          async (lecture) => await deleteCloudinary(lecture.public_id, "video")
-        )
-      );
-    } catch (error) {
-      return res
-        .status(500)
-        .json({
-          success: false,
-          message: "Failed to delete removed lectures from Cloudinary",
-          error: error.message,
-        });
-    }
-
     updateFields.curriculum = updatedCurriculum;
-
-    console.log(updateFields);
 
     const updatedCourse = await Course.findByIdAndUpdate(
       courseId,
       { $set: updateFields },
-      { new: true }
+      { new: true }   
     );
 
     res.status(200).json({ success: true, course: updatedCourse });
@@ -184,7 +160,6 @@ export const updateCourse = async (req, res) => {
 
 export const deleteCourse = async (req, res) => {
   const { courseId } = req.params;
-
   try {
     const course = await Course.findById(courseId);
     if (!course) {

@@ -12,7 +12,7 @@ export const authProtected = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET);
-    req.id = decoded.id; 
+    req.id = decoded.userId; 
     next();
   } catch (error) {
     return res.status(401).json({ message: "Unauthorized Access" });
