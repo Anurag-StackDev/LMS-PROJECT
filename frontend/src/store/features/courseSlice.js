@@ -2,9 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "../../utilities/axiosInstance";
 
 const initialState = {
-  courses: [],
+  courses: [] ,
   loading: false,
   error: null,
+  searchResults: [],
 };
 
 export const allCourses = createAsyncThunk(
@@ -21,9 +22,9 @@ export const allCourses = createAsyncThunk(
 
 export const searchCourse = createAsyncThunk(
   "course/searchCourse",
-  async (Query, { rejectWithValue }) => {
+  async (query, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`api/course/search?${Query}`);
+      const response = await axiosInstance.get(`api/course/search?query=${query}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Search failed");
@@ -72,7 +73,7 @@ const courseSlice = createSlice({
       })
       .addCase(searchCourse.fulfilled, (state, action) => {
         state.loading = false;
-        state.courses = action.payload.courses;
+        state.searchResults = action.payload.courses;
       })
       .addCase(searchCourse.rejected, (state, action) => {
         state.loading = false;
@@ -84,7 +85,7 @@ const courseSlice = createSlice({
       })
       .addCase(singleCourse.fulfilled, (state, action) => {
         state.loading = false;
-        state.courses = action.payload.course;
+        state.courses = action.payload.searchCourses;
       })
       .addCase(singleCourse.rejected, (state, action) => {
         state.loading = false;

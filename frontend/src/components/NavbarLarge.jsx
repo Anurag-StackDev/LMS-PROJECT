@@ -2,16 +2,20 @@ import { LuLayoutDashboard, LuArchive } from "react-icons/lu";
 import { useState, useEffect } from "react";
 import { IoGlobe } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../store/features/authSlice.js";
+import { searchCourse } from "../store/features/courseSlice.js";
+import { useNavigate } from "react-router-dom";
 
 const NavbarLarge = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  let timeoutId;
+  const [inputValue, setInputValue] = useState("");
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
+  let timeoutId;
   const handleMouseEnter = () => {
     if (timeoutId) {
       clearTimeout(timeoutId);
@@ -37,6 +41,11 @@ const NavbarLarge = () => {
     dispatch(logout());
   };
 
+  const handleSearch = (query) => {
+    dispatch(searchCourse(query));
+    navigate("/courses");
+  };
+
   return (
     <nav className="bg-gradient-to-b from-gray-900 to-black text-white">
       <div className="mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -47,7 +56,10 @@ const NavbarLarge = () => {
           <input
             type="text"
             placeholder="Search"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
             className="w-full py-2 px-4 bg-gray-800 text-white rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onKeyDown={(e) => e.key === "Enter" && handleSearch(inputValue)}
           />
         </div>
         <div className="flex items-center gap-4">
@@ -68,7 +80,10 @@ const NavbarLarge = () => {
               >
                 My Learning
               </Link>
-              <Link to={`/${user?.name}/orders`} className="cursor-pointer hover:text-blue-500">
+              <Link
+                to={`/${user?.name}/orders`}
+                className="cursor-pointer hover:text-blue-500"
+              >
                 <LuArchive size={24} />
               </Link>
               <div
