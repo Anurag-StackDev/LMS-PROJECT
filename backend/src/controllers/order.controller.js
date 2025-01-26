@@ -25,7 +25,7 @@ export const createStripeSession = async (req, res) => {
       courseId,
       amount: course.price,
     });
-    console.log("here new order", newOrder);
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -42,76 +42,49 @@ export const createStripeSession = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: `http://localhost:5173/course-progress/${courseId}`,
-      cancel_url: `http://localhost:5173/course-detail/${courseId}`,
+      success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.CLIENT_URL}/failure`,
       metadata: {
         courseId,
         userId,
       },
     });
 
-    if (!session.url) {
+    if (!session.id) {
       return res
         .status(400)
         .json({ success: false, message: "Error while creating session" });
     }
 
     newOrder.paymentId = session.id;
-    newOrder.status = "completed";
     await newOrder.save();
 
-    res.status(200).json({ success: true, url: session.url });
+    res.status(200).json({ success: true, sessionId: session.id });
   } catch (error) {
     console.error("Error creating Stripe session:", error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
-export const stripeWebhook = async (req, res) => {
-  const sig = req.headers["stripe-signature"];
-
-  let event;
+export const handlePaymentSuccess = async (req, res) => {
   try {
-    event = stripe.webhooks.constructEvent(
-      req.rawBody,
-      sig,
-      process.env.STRIPE_WEBHOOK_SECRET
-    );
-  } catch (err) {
-    console.error("Webhook signature verification failed:", err.message);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
+    const { sessionId } = req.body;
+    const order = await Order.findOne({ paymentId: sessionId });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    order.status = "completed";
+    await order.save();
+
+    await Course.findByIdAndUpdate(order.courseId, {
+      $addToSet: { enrolledStudents: order.userId },
+    });
+
+    res.status(200).json(order);
+  } catch (error) {
+    console.error("Error handling payment success:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
-
-  switch (event.type) {
-    case "checkout.session.completed":
-      const session = event.data.object;
-      await handleCheckoutSessionCompleted(session);
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
-
-  res.json({ received: true });
-};
-
-const handleCheckoutSessionCompleted = async (session) => {
-  const { userId, courseId } = session.metadata;
-
-  const order = await Order.findOne({ paymentId: session.id });
-
-  if (!order) {
-    console.error(`Order not found for session ID: ${session.id}`);
-    return;
-  }
-
-  order.status = "completed";
-  await order.save();
-
-  await Course.findByIdAndUpdate(courseId, {
-    $addToSet: { enrolledStudents: userId },
-  });
-
-  console.log(
-    `Order ${order._id} is completed and student enrolled in course ${courseId}.`
-  );
 };

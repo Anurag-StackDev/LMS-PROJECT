@@ -11,11 +11,11 @@ const courseProgressSchema = new Schema({
   userId: { type: String },
   courseId: { type: String },
   completed: { type: Boolean },
-  completionDate: { type: Date },
   lectureProgress: [lectureProgressSchema],
+  completionDate: { type: Date },
   
 });
 
 const CourseProgress = mongoose.model("CourseProgress", courseProgressSchema);
-
+ 
 export default CourseProgress

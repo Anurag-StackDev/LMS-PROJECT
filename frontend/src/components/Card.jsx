@@ -12,7 +12,7 @@ const Card = ({ id, title, level, thumbnail, instructor, price }) => {
       </div>
       <div className="p-4">
         <div className="px-2">
-          <h2 className="text-xl font-semibold mb-2">{title}</h2>
+          <h2 className="text-lg font-bold text-gray-800 mb-1 line-clamp-2 min-h-[3.5rem]">{title}</h2>
           <div className="flex items-center mb-2">
             <span className="text-gray-800 font-semibold">Level:</span>
             <span className="bg-indigo-500 text-white px-2 rounded-md ml-2 text-xs font-bold uppercase">

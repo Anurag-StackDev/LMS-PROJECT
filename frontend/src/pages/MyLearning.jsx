@@ -1,48 +1,26 @@
 import { FaPlay } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import {useDispatch,useSelector} from "react-redux"
+import { useEffect } from "react";
+import { enrolledCourses } from "../store/features/userSlice";
 
 const MyLearning = () => {
-  const courses = [
-    {
-      id: 1,
-      title: "Complete Web Development Bootcamp",
-      level: "Beginner",
-      instructor: "John Doe",
-      thumbnail: "https://via.placeholder.com/300x200",
-      progress: 75,
-    },
-    {
-      id: 2,
-      title: "Advanced JavaScript Masterclass",
-      level: "Advanced",
-      instructor: "Jane Smith",
-      thumbnail: "https://via.placeholder.com/300x200",
-      progress: 30,
-    },
-    {
-      id: 3,
-      title: "Python Programming for Data Science",
-      level: "Intermediate",
-      instructor: "Mike Johnson",
-      thumbnail: "https://via.placeholder.com/300x200",
-      progress: 50,
-    },
-    {
-      id: 4,
-      title: "Mobile App Development with React Native",
-      level: "Intermediate",
-      instructor: "Sarah Wilson",
-      thumbnail: "https://via.placeholder.com/300x200",
-      progress: 90,
-    },
-  ];
+  const {EdCourses} = useSelector((state)=> state.user)
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userName = (user?.name).toLowerCase()
+  
+  const dispatch = useDispatch()
+
+  useEffect(()=>{
+    dispatch(enrolledCourses())
+  },[])
 
   return (
-    <div className="max-w-max">
+    <div>
       <div className="text-3xl font-bold text-white bg-gray-900 p-4 shadow-sm mb-6">
         My Learning
       </div>
-      <div className="lg:mx-10 md:mx-8 sm:mx-6">
+      <div className="lg:mx-8 md:mx-6 sm:mx-4">
         <div className="flex items-center gap-6 mb-6 bg-gray-400/40 p-2 rounded-md">
           <div className="flex items-center gap-2">
             <label htmlFor="sortBy" className=" font-medium">
@@ -76,12 +54,12 @@ const MyLearning = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {courses.map((course) => (
+          {EdCourses.map((course) => (
             <Link
-              to={`/course/${course.id}`}
-              key={course.id}
-              className="transform hover:scale-105 transition-transform duration-300"
-            >
+              key={course._id}
+              to={`/${userName}/enrolled/${course._id}`}
+              className="transform hover:scale-105 transition-transform duration-300">
+            
               <div className="bg-white border border-gray-200 rounded-md shadow-lg overflow-hidden flex flex-col h-[340px]">
                 <div className="relative h-48 flex-shrink-0 group">
                   <div className="absolute inset-0 bg-gray-800/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -100,15 +78,15 @@ const MyLearning = () => {
                     </h2>
 
                     <p className="text-gray-600 font-medium mb-1">
-                      {course.instructor}
+                      {course.instructor.name}
                     </p>
                   </div>
 
                   {/* Progress Bar */}
                   <div className="mt-1">
-                    <div className="w-full bg-gray-200  h-0.5 mb-1">
+                    <div className="w-full bg-indigo-600  h-0.5 mb-1">
                       <div
-                        className="bg-indigo-600 h-0.5  transition-all duration-300"
+                        className="bg-gray-200 h-0.5  transition-all duration-300"
                         style={{ width: `${course.progress}%` }}
                       ></div>
                     </div>
@@ -116,8 +94,8 @@ const MyLearning = () => {
                       <span className="text-sm font-medium text-gray-600">
                         Progress
                       </span>
-                      <span className="text-sm font-semibold text-indigo-600">
-                        {course.progress}%
+                      <span className="text-sm font-semibold">
+                        {course.progress > 0 ? course.progress : 0}%
                       </span>
                     </div>
                   </div>

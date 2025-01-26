@@ -11,6 +11,9 @@ const NavbarLarge = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { user } = useSelector((state) => state.auth);
+
+  const userName = (user?.name?.toLowerCase()) || "";
+
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -75,13 +78,13 @@ const NavbarLarge = () => {
                 </Link>
               )}
               <Link
-                to={`/${user?.name}/my-learning`}
+                to={`/${userName}/my-learning`}
                 className="cursor-pointer hover:text-blue-500"
               >
                 My Learning
               </Link>
               <Link
-                to={`/${user?.name}/orders`}
+                to={`/${userName}/orders`}
                 className="cursor-pointer hover:text-blue-500"
               >
                 <LuArchive size={24} />
@@ -112,7 +115,7 @@ const NavbarLarge = () => {
                         </Link>
                       )}
                       <Link
-                        to={`/${user?.name}/my-learning`}
+                        to={`/${userName}/my-learning`}
                         className="block px-4 py-2 hover:bg-gray-700"
                       >
                         My Learning
@@ -124,13 +127,13 @@ const NavbarLarge = () => {
                         Cart
                       </Link>
                       <Link
-                        to={`/${user?.name}/orders`}
+                        to={`/${userName}/orders`}
                         className="block px-4 py-2 hover:bg-gray-700"
                       >
                         Orders
                       </Link>
                       <Link
-                        to={`/${user?.name}/profile`}
+                        to={`/${userName}/profile`}
                         className="block px-4 py-2 hover:bg-gray-700"
                       >
                         Profile

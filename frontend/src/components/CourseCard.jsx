@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 const CourseCard = ({ course }) => {
   const { _id, title, description, instructor, level, price, thumbnail } =
     course;
-
-    console.log(course);
   return (
     <Link to={`/course/${_id}`}>
       <div className="max-w-full mx-auto bg-white shadow-lg rounded-lg overflow-hidden flex flex-col sm:flex-row md:flex-row lg:flex-row">

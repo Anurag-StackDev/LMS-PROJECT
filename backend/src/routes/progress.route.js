@@ -4,7 +4,7 @@ import { courseProgress, updateCourseProgress } from "../controllers/progress.co
 
 const router = express.Router()
 
-router.get("course-progress/:courseId", authProtected, courseProgress)
+router.get("course-progress", authProtected, courseProgress)
 router.post("update-progress", authProtected, updateCourseProgress)
 
 export default router

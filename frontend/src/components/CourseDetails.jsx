@@ -16,33 +16,24 @@ const CourseDetails = ({
   instructorImage,
 }) => {
   const { user } = useSelector((state) => state.auth);
-  const { orders } = useSelector((state) => state.order);
+  const { sessionId } = useSelector((state) => state.order);
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
-  const stripePromise = loadStripe(
-    "pk_test_51QX3eQSDOYllvf3Y8yCa5biTBfeCiKptrdKPRLHs4KUd8FMyJ6J3V4C5k6qH4Xwjqu3KsZ2d5RnNWAcM7dlX1Jtv00qXjsPx6D"
-  );
+  const stripePromise = loadStripe("pk_test_51QX3eQSDOYllvf3Y8yCa5biTBfeCiKptrdKPRLHs4KUd8FMyJ6J3V4C5k6qH4Xwjqu3KsZ2d5RnNWAcM7dlX1Jtv00qXjsPx6D");
 
   const handlePayment = async () => {
     const stripe = await stripePromise;
-    console.log("before dispatch");
     await dispatch(createOrder({ courseId: id }));
-console.log("here");
-    if (orders.length === 0) {
-      navigate("/my-learning");
-    }
+    
+    if (sessionId) {
+      const result = await stripe.redirectToCheckout({ sessionId });
 
-    // Redirect to Checkout
-    const session = orders[orders.length - 1];
-    console.log(session);
-    const result = await stripe.redirectToCheckout({
-      sessionId: session.id,
-    });
-
-    if (result.error) {
-      console.error("Error:", result.error);
+      if (result.error) {
+        console.error("Error:", result.error.message);
+      }
+    } else {
+      console.error("Error: Order creation failed.");
     }
   };
 
@@ -102,7 +93,7 @@ console.log("here");
           </h2>
           <div className="mt-4 bg-gray-100 rounded-lg p-4">
             <ul className="divide-y divide-gray-200">
-              {courseContent.map((video, index) => (
+              {courseContent?.map((video, index) => (
                 <li
                   key={index}
                   className="px-6 py-4 whitespace-nowrap hover:bg-gray-50"

@@ -49,7 +49,7 @@ const Testimonials = () => {
             className="bg-white p-4 rounded-lg shadow-md h-64"
           >
             <FaQuoteLeft className="text-black mb-2" />
-            <div className="overflow-y-auto h-24">
+            <div className="h-24">
               <p className="text-sm mb-4">{testimonial.quote}</p>
             </div>
             <FaQuoteRight className="text-black mb-6" />

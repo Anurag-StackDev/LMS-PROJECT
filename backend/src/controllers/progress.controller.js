@@ -1,18 +1,13 @@
 import Course from "../models/course.model.js";
 import CourseProgress from "../models/progress.model.js";
 
-const calculateCompletionPercentage = (completedLectures, totalLectures) => {
-  return ((completedLectures / totalLectures) * 100).toFixed(2);
-};
-
 export const courseProgress = async (req, res) => {
-  const { courseId } = req.params;
+  const { courseId } = req.body;
   const userId = req.id;
 
   try {
-    const course = await Course.findOne({
-      _id: courseId,
-      "enrolledStudents._id": userId,
+    const course = await Course.findById(courseId, {
+      enrolledStudents: { $elemMatch: { _id: userId } },
     });
 
     if (!course) {
@@ -34,22 +29,13 @@ export const courseProgress = async (req, res) => {
       });
     }
 
-    const completedLectures = courseProgress.lectureProgress.filter(
-      (lecture) => lecture.viewed
-    ).length;
+    const completedLectures = courseProgress.lectureProgress.filter((lecture) => lecture.viewed).length;
     const totalLectures = course.curriculum.length;
-    const completionPercentage = calculateCompletionPercentage(
-      completedLectures,
-      totalLectures
-    );
+    const completionPercentage = totalLectures > 0 ? Math.round((completedLectures / totalLectures) * 100) : 0;
 
     res.status(200).json({
       success: true,
-      courseTitle: course.title,
-      completedLectures,
-      totalLectures,
-      completionPercentage,
-      courseProgress,
+      Progress: completionPercentage,
     });
   } catch (error) {
     console.error("Error fetching course progress:", error);
@@ -60,6 +46,8 @@ export const courseProgress = async (req, res) => {
 };
 
 export const updateCourseProgress = async (req, res) => {
+  console.log("here")
+  console.log(req.body.progressData);
   const { courseId, lectureId, viewed } = req.body;
   const userId = req.id;
 

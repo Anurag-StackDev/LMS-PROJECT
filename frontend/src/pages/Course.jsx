@@ -14,7 +14,6 @@ const Course = () => {
     dispatch(singleCourse(courseId));
   }, []);
 
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -42,7 +41,7 @@ const Course = () => {
         instructorName={instructor?.name}
         instructorImage={instructor?.imageUrl}
       />
-      <CourseAd title={title} price={price} thumbnail={thumbnail} />
+      <CourseAd id={_id} title={title} price={price} thumbnail={thumbnail} />
     </div>
   );
 };

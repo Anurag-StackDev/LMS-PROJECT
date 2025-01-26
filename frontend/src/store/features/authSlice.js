@@ -69,11 +69,6 @@ export const handleRefreshToken = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    clearError: (state) => {
-      state.error = null;
-    },
-  },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -129,5 +124,4 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError } = authSlice.actions;
 export default authSlice.reducer;

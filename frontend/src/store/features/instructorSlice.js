@@ -71,14 +71,6 @@ export const deleteCourse = createAsyncThunk(
 const instructorSlice = createSlice({
   name: "instructor",
   initialState,
-  reducers: {
-    clearError(state) {
-      state.error = null;
-    },
-    clearMessage(state) {
-      state.message = null;
-    },
-  },
   extraReducers: (builder) => {
     builder
       .addCase(instructorCourses.pending, (state) => {
@@ -137,5 +129,4 @@ const instructorSlice = createSlice({
   },
 });
 
-export const { clearError, clearMessage } = instructorSlice.actions;
 export default instructorSlice.reducer;

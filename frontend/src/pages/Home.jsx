@@ -13,7 +13,7 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(allCourses());
+     dispatch(allCourses());  
   }, [dispatch]);
 
   return (
@@ -45,7 +45,7 @@ const Home = () => {
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
-          {courses.map((course) => (
+          { courses.map((course) => (
             <div
               key={course._id}
               className="flex-grow-0 flex-shrink-0 basis-full sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 p-2"

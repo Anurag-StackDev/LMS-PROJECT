@@ -1,38 +1,51 @@
 import ReactPlayer from "react-player";
 import { GoTrophy } from "react-icons/go";
-import { useState } from "react";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import { useDispatch, useSelector } from "react-redux";
 import CourseDetails from "../components/CourseDetails";
-import { courseData } from '../assets/courseData';
+import { enrolledCourse } from "../store/features/userSlice";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import {
+  getProgress,
+  updateProgress,
+} from "../store/features/courseProgressSlice";
 
 const EnrolledCourse = () => {
+  const dispatch = useDispatch();
+  const { courseId } = useParams();
+  const { EdCourse } = useSelector((state) => state.user);
+  const { progress } = useSelector((state) => state.courseProgress);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [selectedVideo, setSelectedVideo] = useState(0);
+  const [progressData, setProgressData] = useState({
+    courseId: "",
+    lectureId: "",
+    viewed: false,
+  });
+  const [selectedLecture, setSelectedLecture] = useState(0);
   const [isVideoSectionOpen, setIsVideoSectionOpen] = useState(true);
+
+  useEffect(() => {
+    dispatch(enrolledCourse(courseId));
+    dispatch(getProgress(courseId));
+  }, [dispatch, courseId]);
+
+  useEffect(() => {
+    if (
+      progressData.courseId &&
+      progressData.lectureId &&
+      progressData.viewed
+    ) {
+      console.log(progressData);
+      dispatch(updateProgress(progressData));
+    }
+  }, [dispatch, progressData]);
 
   const isSmallScreen = useMediaQuery({ query: "(max-width: 640px)" });
   const isMediumScreen = useMediaQuery({ query: "(max-width: 1024px)" });
 
-  // Get the first course data as default
-  const {
-    title,
-    description,
-    instructorName,
-    instructorImage
-  } = courseData[0];
-
-  // Example course content (you would fetch this from your backend)
-  const courseVideos = [
-    { id: 1, title: "Introduction to the Course", url: "video-url-1" },
-    { id: 2, title: "Chapter 1: Getting Started", url: "video-url-2" },
-    { id: 3, title: "Chapter 2: Basic Concepts", url: "video-url-3" },
-    { id: 4, title: "Chapter 3: Advanced Topics", url: "video-url-4" },
-  ];
-
   const toggleVideoSection = (e) => {
-    // Prevent the click event from triggering when clicking on course videos
     if (e.target.closest(".course-video-item")) {
       return;
     }
@@ -69,14 +82,26 @@ const EnrolledCourse = () => {
       <div className="mx-auto p-4">
         <div className="flex flex-col lg:flex-row gap-6 bg-white rounded-md shadow-md p-6">
           <div className="flex-1">
-            <div className="relative rounded-lg overflow-hidden" onClick={handlePlayClick}>
+            <div
+              className="relative rounded-lg overflow-hidden"
+            >
               <ReactPlayer
-                url={courseVideos[selectedVideo].url}
+                url={EdCourse?.curriculum[selectedLecture].videoUrl}
                 controls
                 width={width}
                 height={height}
-                playing={isPlaying}
-                onProgress={(state) => setProgress(state.played * 100)}
+                playing={true}
+                muted={true}
+                onClick={handlePlayClick}
+                onProgress={(state) => {
+                  if (state.played === 1) {
+                    setProgressData({
+                      courseId: EdCourse._id,
+                      lectureId: EdCourse.curriculum[selectedLecture]._id,
+                      viewd: true,
+                    });
+                  }
+                }}
               />
             </div>
             <div className="p-2">
@@ -110,24 +135,24 @@ const EnrolledCourse = () => {
                 isVideoSectionOpen ? "block" : "hidden lg:block"
               } space-y-2`}
             >
-              {courseVideos.map((video, index) => (
+              {EdCourse?.curriculum.map((lecture, index) => (
                 <div
-                  key={video.id}
-                  onClick={() => setSelectedVideo(index)}
+                  key={lecture._id}
+                  onClick={() => setSelectedLecture(index)}
                   className={`course-video-item p-4 cursor-pointer rounded-md transition-all duration-200 ${
-                    selectedVideo === index
+                    selectedLecture === index
                       ? "bg-blue-50 border-l-4 border-gray-500"
                       : "hover:bg-gray-50"
                   }`}
                 >
                   <h4
                     className={`font-medium ${
-                      selectedVideo === index
+                      selectedLecture === index
                         ? "text-indigo-600"
                         : "text-gray-700"
                     }`}
                   >
-                    {video.title}
+                    {lecture.title}
                   </h4>
                 </div>
               ))}
@@ -135,11 +160,11 @@ const EnrolledCourse = () => {
           </div>
         </div>
       </div>
-      <CourseDetails 
-        title={title}
-        description={description}
-        instructorName={instructorName}
-        instructorImage={instructorImage}
+      <CourseDetails
+        title={EdCourse?.title}
+        description={EdCourse?.description}
+        instructorName={EdCourse?.instructor.name}
+        instructorImage={EdCourse?.instructor.imageUrl}
         enrolled={true}
       />
     </div>

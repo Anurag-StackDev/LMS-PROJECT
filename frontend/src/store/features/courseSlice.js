@@ -47,12 +47,6 @@ export const singleCourse = createAsyncThunk(
 const courseSlice = createSlice({
   name: "course",
   initialState,
-  reducers: {
-    clearError(state) {
-      state.error = null;
-    },
-  },
-
   extraReducers: (builder) => {
     builder
       .addCase(allCourses.pending, (state) => {
@@ -85,7 +79,7 @@ const courseSlice = createSlice({
       })
       .addCase(singleCourse.fulfilled, (state, action) => {
         state.loading = false;
-        state.courses = action.payload.searchCourses;
+        state.courses = action.payload.course;
       })
       .addCase(singleCourse.rejected, (state, action) => {
         state.loading = false;
@@ -94,5 +88,4 @@ const courseSlice = createSlice({
   },
 });
 
-export const { clearError } = courseSlice.actions;
 export default courseSlice.reducer;

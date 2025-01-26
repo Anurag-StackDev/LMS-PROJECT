@@ -17,20 +17,22 @@ import MyLearning from "./pages/MyLearning";
 import Dashboard from "./pages/Dashboard";
 import Footer from "./components/Footer";
 import Orders from "./pages/Orders.jsx";
+import Success from "./pages/Success.jsx";
+import Failure from "./pages/Failure.jsx";
 
 const App = () => {
   const dispatch = useDispatch();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
-  const userName = user?.name || '';
+  const userName = user?.name || "";
 
   useEffect(() => {
-    dispatch(handleRefreshToken()).catch(error => {
+    dispatch(handleRefreshToken()).catch((error) => {
       console.error("Error refreshing token:", error);
     });
   }, [dispatch]);
 
   const isLargeScreen = useMediaQuery({ query: "(min-width: 1024px)" });
-  
+
   return (
     <>
       <Toaster />
@@ -40,10 +42,12 @@ const App = () => {
         <Route path="/auth" element={<Auth />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/course/:courseId" element={<Course />} />
+        <Route path="success" element={<Success />} />
+        <Route path="failure" element={<Failure />} />
         {isAuthenticated && userName && (
           <Route path={`${userName}`}>
             <Route path="my-learning" element={<MyLearning />} />
-            <Route path="enrolled/:id" element={<EnrolledCourse />} />
+            <Route path="enrolled/:courseId" element={<EnrolledCourse />} />
             <Route path="orders" element={<Orders />} />
           </Route>
         )}
@@ -62,4 +66,3 @@ const App = () => {
 };
 
 export default App;
-

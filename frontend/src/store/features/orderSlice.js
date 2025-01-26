@@ -12,8 +12,23 @@ export const createOrder = createAsyncThunk(
   async (orderData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(
-        "/api/orders/create-session",
+        "/api/order/create-session",
         orderData
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const handlePaymentSuccess = createAsyncThunk(
+  "order/handlePaymentSuccess",
+  async (sessionId, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post(
+        "/api/order/payment-success",
+        { sessionId }
       );
       return response.data;
     } catch (error) {
@@ -34,9 +49,18 @@ const orderSlice = createSlice({
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.loading = false;
-        state.orders.push(action.payload);
       })
       .addCase(createOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload.message;
+      })
+      .addCase(handlePaymentSuccess.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders = state.orders.map(order =>
+          order.paymentId === action.payload.paymentId ? action.payload : order
+        );
+      })
+      .addCase(handlePaymentSuccess.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload.message;
       });

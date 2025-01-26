@@ -1,10 +1,32 @@
 import { FaRegClock, FaRegPlayCircle, FaMobileAlt } from "react-icons/fa";
 import { MdOndemandVideo } from "react-icons/md";
 import { IoInfinite, IoTrophyOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import { createOrder } from "../store/features/orderSlice";
 
-const CourseAd = ({ price, thumbnail, title }) => {
-  const { user } = useSelector((state) => state.auth)
+const CourseAd = ({ id, price, thumbnail, title }) => {
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const stripePromise = loadStripe("pk_test_51QX3eQSDOYllvf3Y8yCa5biTBfeCiKptrdKPRLHs4KUd8FMyJ6J3V4C5k6qH4Xwjqu3KsZ2d5RnNWAcM7dlX1Jtv00qXjsPx6D");
+
+  const handlePayment = async () => {
+    const stripe = await stripePromise;
+    const result = await dispatch(createOrder({ courseId: id }));
+
+    if (result.payload && result.payload.sessionId) {
+      const checkoutResult = await stripe.redirectToCheckout({ sessionId: result.payload.sessionId });
+
+      if (checkoutResult.error) {
+        console.error("Error:", checkoutResult.error.message);
+      }
+    } else {
+      console.error("Error: Order creation failed.");
+    }
+  };
 
   return (
     <div className="hidden lg:block max-w-md lg:w-1/3 mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
@@ -25,11 +47,13 @@ const CourseAd = ({ price, thumbnail, title }) => {
           price!
         </div>
         <div className="mt-6">
-          <button className="w-full bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600">
+          <button
+            onClick={user ? handlePayment : () => navigate("/auth")}
+            className="w-full bg-indigo-500 text-white py-3 rounded-lg hover:bg-indigo-600"
+          >
             Buy Now
           </button>
         </div>
-        
         <div className="text-center text-sm text-gray-500 mt-4">
           30-Day No-Money-Back Guarantee
         </div>

@@ -10,7 +10,11 @@ export const getAllCourse = async (req, res) => {
         .json({ success: false, message: "No courses found" });
     }
 
-    res.status(200).json({ success: true, courses });
+    const filteredCourses = courses.map((course) => {
+      const { curriculum, ...courseData } = course.toObject();
+      return courseData;
+    });
+    res.status(200).json({ success: true, courses: filteredCourses });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -24,14 +28,14 @@ export const searchCourse = async (req, res) => {
   try {
     const query = {};
 
-    Object.keys(req.query).forEach(key => {
+    Object.keys(req.query).forEach((key) => {
       query.$or = [
-        { title: { $regex: req.query[key], $options: 'i' } },
-        { description: { $regex: req.query[key], $options: 'i' } }
+        { title: { $regex: req.query[key], $options: "i" } },
+        { description: { $regex: req.query[key], $options: "i" } },
       ];
     });
 
-    const courses = await Course.find(query);
+    const courses = await Course.find(query).populate("instructor");
 
     if (!courses.length) {
       return res
@@ -39,7 +43,12 @@ export const searchCourse = async (req, res) => {
         .json({ success: false, message: "No courses found" });
     }
 
-    res.status(200).json({ success: true, courses });
+    const filteredCourses = courses.map((course) => {
+      const { curriculum, ...courseData } = course.toObject();
+      return courseData;
+    });
+
+    res.status(200).json({ success: true, courses: filteredCourses });
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -49,19 +58,28 @@ export const searchCourse = async (req, res) => {
   }
 };
 
-
 export const singleCourse = async (req, res) => {
   const { courseId } = req.params;
   try {
     const course = await Course.findById(courseId).populate("instructor");
-
     if (!course) {
       return res
         .status(404)
         .json({ success: false, message: "Course not found" });
     }
 
-    res.status(200).json({ success: true, course });
+    const filteredCurriculum = course.curriculum.map((lecture) => {
+      if (lecture.freePreview) {
+        return lecture;
+      } else {
+        return { ...lecture.toObject(), videoUrl: null };
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      course: { ...course.toObject(), curriculum: filteredCurriculum },
+    });
   } catch (error) {
     res.status(500).json({
       success: false,

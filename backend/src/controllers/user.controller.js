@@ -1,3 +1,4 @@
+import Course from "../models/course.model.js";
 import User from "../models/user.model.js";
 import { deleteCloudinary, uploadCloudinary } from "../utilities/Cloudinary.js";
 
@@ -46,44 +47,65 @@ export const updateProfile = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
       new: true,
     });
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Profile updated successfully",
-        user: updatedUser,
-      });
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Profile update failed",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Profile update failed",
+      error: error.message,
+    });
   }
 };
 
 export const enrolledCourses = async (req, res) => {
   const userId = req.id;
   try {
-    const enrolledIn = await Course.find({ enrolledStudents: userId });
+    const enrolledIn = await Course.find({ enrolledStudents: userId }).populate(
+      "instructor"
+    );
     if (!enrolledIn.length) {
       return res
         .status(404)
         .json({ success: false, message: "Not enrolled in any course" });
     }
-
-    res
-      .status(200)
-      .json({ success: true, message: "Enrolled courses", enrolledIn });
+    res.status(200).json({
+      success: true,
+      message: "Enrolled courses",
+      courses: enrolledIn,
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Failed to retrieve enrolled courses",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Failed to retrieve enrolled courses",
+      error: error.message,
+    });
+  }
+};
+
+export const enrolledCourse = async (req, res) => {
+  const userId = req.id;
+  const { courseId } = req.body;
+
+  try {
+    const course = await Course.findById(courseId).populate("instructor");
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
+    }
+
+    if (course.enrolledStudents.includes(userId)) {
+      return res.status(200).json({ success: true, course: course });
+    }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to get course details",
+      error: error.message,
+    });
   }
 };
